@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension>
+  <name>Multipage</name>
+  <id>hardpixel.eu.multipage_export</id>
+  <dependency type="executable" location="extensions">multipage_export.py</dependency>
+  <dependency type="executable" location="extensions">simplestyle.py</dependency>
+
+  <param name="description" type="description" indent="-1">Select a set of objects to export as single files.</param>
+  <param name="properties-title" type="description" appearance="header">Export Properties</param>
+  <param name="name-label" type="description" indent="-1">Base Name</param>
+  <param name="name" type="string" gui-text=""></param>
+  <param name="format-label" type="description" indent="-1">File Format</param>
+  <param name="format" type="enum" gui-text="">
+    <item value="pdf">PDF</item>
+    <item value="png">PNG</item>
+    <item value="svg">SVG</item>
+  </param>
+  <param name="options-title" type="description" appearance="header">Options</param>
+  <param name="replace" type="boolean" gui-text="Replace existing files">false</param>
+  <param name="autoname" type="boolean" gui-text="Name files from object IDs">false</param>
+
+  <effect needs-live-preview="false">
+    <object-type>all</object-type>
+    <effects-menu>
+      <submenu _name="Export"/>
+    </effects-menu>
+  </effect>
+
+  <script>
+    <command reldir="extensions" interpreter="python">multipage_export.py</command>
+  </script>
+</inkscape-extension>
