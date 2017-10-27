@@ -8,6 +8,9 @@ Copy extension files `multipage_export.inx` and `multipage_export.py` into `~/.c
 Inkscape needs to be restarted for the extension to appear.
 `python2-lxml` and  `librsvg` must be installed for this extension to work.
 
+### Inkscape Extensions
+Download from Inkscape's Extensions page [here](https://inkscape.org/en/~olibia/%E2%98%85multipage-export-extension).
+
 ### Arch Linux
 [AUR package](https://aur.archlinux.org/packages/inkscape-multipage-export)
 
@@ -15,12 +18,11 @@ Inkscape needs to be restarted for the extension to appear.
 * Select the objects you want to export and from the Extensions menu choose Export and Multipage.
 * Provide a name for the destination folder and select the export format.
 
-Available formats are `PDF`, `PNG` and `SVG`.
-
+Available formats are `PDF`, `PNG` and `SVG`.  
 *You can also name the exported files after the objects' IDs*
 
 ### Notes
-Exported files are located at `~/Documents/Exports`.
+Exported files are located at `~/Documents/Exports`.  
 Tested only on Inkscape for Linux.
 
 ## License
