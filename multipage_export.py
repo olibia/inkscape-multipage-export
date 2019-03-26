@@ -25,6 +25,10 @@ class MultipageExport(inkex.Effect):
     self.OptionParser.add_option('-a', '--autoname', action='store', type='string', dest='autoname', help='Use IDs for names')
     self.OptionParser.add_option('-r', '--replace',  action='store', type='string', dest='replace',  help='Replace existing files')
 
+  def run_command(self, args):
+    proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc.wait()
+
   def write_tempfile(self):
     desc, tmpfile = tempfile.mkstemp(suffix='.svg', prefix='multipage-export-')
     self.document.write(os.fdopen(desc, 'wb'))
@@ -60,9 +64,20 @@ class MultipageExport(inkex.Effect):
       svg.attrib['height'] = svg.attrib['height'].replace('pt', '')
       xml.write(path)
 
-  def export(self, oid, fformat, output, source):
-    proc = subprocess.Popen(['rsvg-convert', '-i', oid, '-d', '72', '-p', '72', '-f', fformat, '-o', output, source])
-    proc.wait()
+  def rsvg_export(self, oid, fformat, output, tmpfile):
+    self.run_command([
+      'rsvg-convert',
+      '-u',
+      '-i', oid,
+      '-d', '96',
+      '-p', '96',
+      '-f', fformat,
+      '-o', output,
+      tmpfile
+    ])
+
+  def export(self, oid, fformat, output, tmpfile):
+    self.rsvg_export(oid, fformat, output, tmpfile)
 
   def export_files(self):
     tmpfile = self.write_tempfile()
