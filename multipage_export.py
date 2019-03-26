@@ -21,6 +21,7 @@ class MultipageExport(inkex.Effect):
     inkex.Effect.__init__(self)
 
     self.OptionParser.add_option('-n', '--name',     action='store', type='string', dest='name',     help='Base name')
+    self.OptionParser.add_option('-e', '--exporter', action='store', type='string', dest='exporter', help='Exporter')
     self.OptionParser.add_option('-f', '--format',   action='store', type='string', dest='format',   help='File format')
     self.OptionParser.add_option('-a', '--autoname', action='store', type='string', dest='autoname', help='Use IDs for names')
     self.OptionParser.add_option('-r', '--replace',  action='store', type='string', dest='replace',  help='Replace existing files')
@@ -117,7 +118,10 @@ class MultipageExport(inkex.Effect):
     ])
 
   def export(self, oid, fformat, output, tmpfile):
-    self.rsvg_export(oid, fformat, output, tmpfile)
+    if self.options.exporter == 'inkscape':
+      self.inkscape_export(oid, fformat, output, tmpfile)
+    else:
+      self.rsvg_export(oid, fformat, output, tmpfile)
 
   def export_files(self):
     tmpfile = self.write_tempfile()

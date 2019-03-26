@@ -9,6 +9,11 @@
   <param name="properties-title" type="description" appearance="header">Export Properties</param>
   <param name="name-label" type="description" indent="-1">Base Name</param>
   <param name="name" type="string" gui-text=""></param>
+  <param name="exporter-label" type="description" indent="-1">Exporter</param>
+  <param name="exporter" type="enum" gui-text="">
+    <item value="rsvg">RSVG (Faster, Inconsistent results)</item>
+    <item value="inkscape">Inkscape (Slower, Best results)</item>
+  </param>
   <param name="format-label" type="description" indent="-1">File Format</param>
   <param name="format" type="enum" gui-text="">
     <item value="pdf">PDF</item>
