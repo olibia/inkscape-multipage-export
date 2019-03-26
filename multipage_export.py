@@ -73,12 +73,12 @@ class MultipageExport(inkex.Effect):
       findex = findex + 1
 
       if self.options.autoname == 'true':
-        path = self.file_path(oid, fformat)
+        output = self.file_path(oid, fformat)
       else:
-        path = self.file_path("%s-%s" % (fname, findex), fformat)
+        output = self.file_path("%s-%s" % (fname, findex), fformat)
 
-      self.export(oid, fformat, path, tmpfile)
-      self.remove_pt(path, fformat)
+      self.export(oid, fformat, output, tmpfile)
+      self.remove_pt(output, fformat)
 
   def effect(self):
     if self.options.name is None:
