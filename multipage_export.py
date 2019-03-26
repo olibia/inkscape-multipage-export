@@ -93,6 +93,7 @@ class MultipageExport(inkex.Effect):
 
     self.run_command([
       'inkscape',
+      '--vacuum-defs',
       '--export-%s=%s' % (fformat, output),
       tmpfile
     ])
