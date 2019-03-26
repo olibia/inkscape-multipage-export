@@ -27,8 +27,12 @@ class MultipageExport(inkex.Effect):
     self.OptionParser.add_option('-r', '--replace',  action='store', type='string', dest='replace',  help='Replace existing files')
 
   def run_command(self, args):
-    proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    proc.wait()
+    try:
+      proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+      proc.wait()
+    except OSError:
+      inkex.errormsg('Program "%s" is not installed!' % args[0])
+      exit()
 
   def write_tempfile(self):
     desc, tmpfile = tempfile.mkstemp(suffix='.svg', prefix='multipage-export-')
