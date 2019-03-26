@@ -64,6 +64,45 @@ class MultipageExport(inkex.Effect):
       svg.attrib['height'] = svg.attrib['height'].replace('pt', '')
       xml.write(path)
 
+  def inkscape_export_png(self, oid, output, tmpfile):
+    self.run_command([
+      'inkscape',
+      '--export-id=%s' % oid,
+      '--export-png=%s' % output,
+      tmpfile
+    ])
+
+  def inkscape_export_format(self, oid, fformat, output):
+    tmpfile = self.write_tempfile()
+    fformat = 'plain-svg' if fformat == 'svg' else fformat
+
+    self.run_command([
+      'inkscape',
+      '--select=%s' % oid,
+      '--verb=EditCut',
+      '--verb=EditSelectAll',
+      '--verb=EditDelete',
+      '--verb=EditPaste',
+      '--verb=EditSelectAll',
+      '--verb=FitCanvasToSelection',
+      '--verb=FileSave',
+      '--verb=FileClose',
+      '--verb=FileQuit',
+      tmpfile
+    ])
+
+    self.run_command([
+      'inkscape',
+      '--export-%s=%s' % (fformat, output),
+      tmpfile
+    ])
+
+  def inkscape_export(self, oid, fformat, output, tmpfile):
+    if fformat == 'png':
+      self.inkscape_export_png(oid, output, tmpfile)
+    else:
+      self.inkscape_export_format(oid, fformat, output)
+
   def rsvg_export(self, oid, fformat, output, tmpfile):
     self.run_command([
       'rsvg-convert',
