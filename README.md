@@ -19,7 +19,10 @@ Download from Inkscape's Extensions page [here](https://inkscape.org/en/~olibia/
 * Provide a name for the destination folder and select the export format.
 
 Available formats are `PDF`, `PNG` and `SVG`.  
-*You can also name the exported files after the objects' IDs*
+Available exporters are `rsvg`, and `inkscape`.  
+
+*You can also name the exported files after the objects' IDs*  
+*Combine PDFs requires `pdftk` installed in your system*
 
 ### Notes
 Exported files are located at `~/Documents/Exports`.  
