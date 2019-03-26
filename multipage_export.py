@@ -33,7 +33,8 @@ class MultipageExport(inkex.Effect):
 
   def export_path(self, fformat):
     name = self.options.name
-    path = "%s/Documents/Exports/%s/%s" % (os.path.expanduser('~'), name, fformat.upper())
+    home = os.path.expanduser('~')
+    path = "%s/Documents/Exports/%s/%s" % (home, name, fformat.upper())
 
     if not os.path.exists(path):
       os.makedirs(path)
