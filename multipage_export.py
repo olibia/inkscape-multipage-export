@@ -25,6 +25,7 @@ class MultipageExport(inkex.Effect):
     self.OptionParser.add_option('-f', '--format',   action='store', type='string', dest='format',   help='File format')
     self.OptionParser.add_option('-a', '--autoname', action='store', type='string', dest='autoname', help='Use IDs for names')
     self.OptionParser.add_option('-r', '--replace',  action='store', type='string', dest='replace',  help='Replace existing files')
+    self.OptionParser.add_option('-c', '--combine',  action='store', type='string', dest='combine',  help='Combine into single PDF')
 
   def run_command(self, args):
     try:
@@ -123,11 +124,21 @@ class MultipageExport(inkex.Effect):
     else:
       self.rsvg_export(oid, fformat, output, tmpfile)
 
+  def pdftk_combine(self, output, file_paths):
+    output  = self.file_path("%s-%s" % (output, 'All'), 'pdf')
+    command = ['pdftk']
+
+    command.extend(file_paths)
+    command.extend(['cat', 'output', output])
+
+    self.run_command(command)
+
   def export_files(self):
     tmpfile = self.write_tempfile()
     fformat = self.options.format
     fname   = self.options.name
     findex  = 0
+    fpaths  = []
 
     for oid in self.options.ids:
       findex = findex + 1
@@ -137,11 +148,16 @@ class MultipageExport(inkex.Effect):
       else:
         output = self.file_path("%s-%s" % (fname, findex), fformat)
 
+      fpaths.append(output)
+
       if self.options.replace == 'false' and os.path.exists(output):
         continue
 
       self.export(oid, fformat, output, tmpfile)
       self.remove_pt(output, fformat)
+
+    if self.options.combine == 'true' and fformat == 'pdf':
+      self.pdftk_combine(fname, fpaths)
 
   def effect(self):
     if self.options.name is None:

@@ -23,6 +23,7 @@
   <param name="options-title" type="description" appearance="header">Options</param>
   <param name="replace" type="boolean" gui-text="Replace existing files">false</param>
   <param name="autoname" type="boolean" gui-text="Name files from object IDs">false</param>
+  <param name="combine" type="boolean" gui-text="Combine into single PDF">false</param>
 
   <effect needs-live-preview="false">
     <object-type>all</object-type>
