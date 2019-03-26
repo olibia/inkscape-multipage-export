@@ -54,10 +54,6 @@ class MultipageExport(inkex.Effect):
     path = self.export_path(fformat)
     path = "%s/%s.%s" % (path, fname, fformat)
 
-    if self.options.replace == 'false' and os.path.exists(path):
-      inkex.errormsg('File already exists!')
-      exit()
-
     return path
 
   def remove_pt(self, path, fformat):
@@ -140,6 +136,9 @@ class MultipageExport(inkex.Effect):
         output = self.file_path(oid, fformat)
       else:
         output = self.file_path("%s-%s" % (fname, findex), fformat)
+
+      if self.options.replace == 'false' and os.path.exists(output):
+        continue
 
       self.export(oid, fformat, output, tmpfile)
       self.remove_pt(output, fformat)
