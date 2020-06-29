@@ -11,33 +11,67 @@ import tempfile
 import subprocess
 import lxml.etree as et
 
-__version__ = '1.0'
-
-inkex.localize()
-
 class MultipageExport(inkex.Effect):
 
   def __init__(self):
     inkex.Effect.__init__(self)
 
-    self.OptionParser.add_option('-n', '--name',     action='store', type='string', dest='name',     help='Base name')
-    self.OptionParser.add_option('-e', '--exporter', action='store', type='string', dest='exporter', help='Exporter')
-    self.OptionParser.add_option('-f', '--format',   action='store', type='string', dest='format',   help='File format')
-    self.OptionParser.add_option('-a', '--autoname', action='store', type='string', dest='autoname', help='Use IDs for names')
-    self.OptionParser.add_option('-r', '--replace',  action='store', type='string', dest='replace',  help='Replace existing files')
-    self.OptionParser.add_option('-c', '--combine',  action='store', type='string', dest='combine',  help='Combine into single PDF')
+    self.arg_parser.add_argument(
+      '-n', '--name',
+      type=str,
+      dest='name',
+      help='Base name'
+    )
+
+    self.arg_parser.add_argument(
+      '-e', '--exporter',
+      type=str,
+      dest='exporter',
+      help='Exporter'
+    )
+
+    self.arg_parser.add_argument(
+      '-f', '--format',
+      type=str,
+      dest='format',
+      help='File format'
+    )
+
+    self.arg_parser.add_argument(
+      '-a', '--autoname',
+      type=str,
+      dest='autoname',
+      help='Use IDs for names'
+    )
+
+    self.arg_parser.add_argument(
+      '-r', '--replace',
+      type=str,
+      dest='replace',
+      help='Replace existing files'
+    )
+
+    self.arg_parser.add_argument(
+      '-c', '--combine',
+      type=str,
+      dest='combine',
+      help='Combine into single PDF'
+    )
 
   def run_command(self, args):
     try:
-      proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-      proc.wait()
+      with subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE) as proc:
+        proc.wait(timeout=300)
     except OSError:
       inkex.errormsg('Program "%s" is not installed!' % args[0])
       exit()
 
   def write_tempfile(self):
     desc, tmpfile = tempfile.mkstemp(suffix='.svg', prefix='multipage-export-')
-    self.document.write(os.fdopen(desc, 'wb'))
+    file = os.fdopen(desc, 'wb')
+
+    self.document.write(file)
+    file.close()
 
     return tmpfile
 
@@ -66,45 +100,15 @@ class MultipageExport(inkex.Effect):
       svg.attrib['height'] = svg.attrib['height'].replace('pt', '')
       xml.write(path)
 
-  def inkscape_export_png(self, oid, output, tmpfile):
-    self.run_command([
-      'inkscape',
-      '--export-id=%s' % oid,
-      '--export-png=%s' % output,
-      tmpfile
-    ])
-
-  def inkscape_export_format(self, oid, fformat, output):
-    tmpfile = self.write_tempfile()
-    fformat = 'plain-svg' if fformat == 'svg' else fformat
-
-    self.run_command([
-      'inkscape',
-      '--select=%s' % oid,
-      '--verb=EditCut',
-      '--verb=EditSelectAll',
-      '--verb=EditDelete',
-      '--verb=EditPaste',
-      '--verb=EditSelectAll',
-      '--verb=FitCanvasToSelection',
-      '--verb=FileSave',
-      '--verb=FileClose',
-      '--verb=FileQuit',
-      tmpfile
-    ])
-
+  def inkscape_export(self, oid, fformat, output, tmpfile):
     self.run_command([
       'inkscape',
       '--vacuum-defs',
-      '--export-%s=%s' % (fformat, output),
+      '--export-id=%s' % oid,
+      '--export-id-only',
+      '--export-filename=%s' % output,
       tmpfile
     ])
-
-  def inkscape_export(self, oid, fformat, output, tmpfile):
-    if fformat == 'png':
-      self.inkscape_export_png(oid, output, tmpfile)
-    else:
-      self.inkscape_export_format(oid, fformat, output)
 
   def rsvg_export(self, oid, fformat, output, tmpfile):
     self.run_command([
@@ -172,4 +176,4 @@ class MultipageExport(inkex.Effect):
 
 if __name__ == '__main__':
   exporter = MultipageExport()
-  exporter.affect()
+  exporter.run()

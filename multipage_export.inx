@@ -3,7 +3,6 @@
   <name>Multipage</name>
   <id>hardpixel.eu.multipage_export</id>
   <dependency type="executable" location="extensions">multipage_export.py</dependency>
-  <dependency type="executable" location="extensions">simplestyle.py</dependency>
 
   <param name="description" type="description" indent="-1">Select a set of objects to export as single files.</param>
   <param name="properties-title" type="description" appearance="header">Export Properties</param>
